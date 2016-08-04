@@ -46,7 +46,6 @@ let slack = new RtmClient(token, {
 slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
     // Get the user's name
     let user = slack.dataStore.getUserById(slack.activeUserId);
-// console.log(slack);
 
     // Get the team's name
     let team = slack.dataStore.getTeamById(slack.activeTeamId);
@@ -87,6 +86,9 @@ slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
         }).join(', ');
 
         console.log('Members of this channel: ', memberNames);
+
+        // Send a greeting to everyone in the channel
+        slack.sendMessage(`Hello ${memberNames}!`, channel.id);
     });
 });
 
