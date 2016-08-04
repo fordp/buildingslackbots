@@ -9,7 +9,7 @@
   "author": "Glen",
   "license": "ISC",
   "dependencies": {
-    "@slack/client": "^3.5.4"
+    "@slack/client": "^3.5.4",
+    "config": "^1.21.0"
   }
 }
-
