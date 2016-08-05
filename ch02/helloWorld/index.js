@@ -92,6 +92,42 @@ slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
     });
 });
 
+slack.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
+    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
+});
+
+slack.on(RTM_EVENTS.MESSAGE, (message) => {
+    let user = slack.dataStore.getUserById(message.user)
+
+    if (user && user.is_bot) {
+        return;
+    }
+
+    let channel = slack.dataStore.getChannelGroupOrDMById(message.channel);
+
+    if (message.text) {
+        let msg = message.text.toLowerCase();
+
+        if (/(hello|hi) (bot|awesomebot)/g.test(msg)) {
+            slack.sendMessage(`Hello to you too, ${user.name}!`, channel.id);
+        }
+
+        if (/uptime/g.test(msg)) {
+            let dm = slack.dataStore.getDMByName(user.name);
+
+            let uptime = process.uptime();
+
+            // get the uptime in hours, minutes and seconds
+            let minutes = parseInt(uptime / 60, 10),
+                hours = parseInt(minutes / 60, 10),
+                seconds = parseInt(uptime - (minutes * 60) - ((hours * 60) * 60), 10);
+
+            slack.sendMessage(`I have been running for: ${hours} hours, ${minutes} minutes and ${seconds} seconds.`, dm.id);
+        }
+    }
+});
+
+
 // Start the login process
 slack.start();
 
