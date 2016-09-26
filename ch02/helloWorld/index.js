@@ -113,6 +113,11 @@ slack.on(RTM_EVENTS.MESSAGE, (message) => {
         }
 
         if (/uptime/g.test(msg)) {
+            if (!user.is_admin) {
+                slack.sendMessage(`Sorry ${user.name}, but that functionality is only for admins.`, channel.id);
+                return;
+            }
+            
             let dm = slack.dataStore.getDMByName(user.name);
 
             let uptime = process.uptime();
